@@ -1,0 +1,42 @@
+#!/bin/zsh
+
+# Strip non-alphanumeric characters, except space, underscore, and hyphen
+readonly target_img="${alfred_workflow_cache}/${original_query//[^[:alnum:] _-]}.jpeg"
+
+# Helpers to show results and exit
+function show_data {
+  printf '{"variables":{"target_img":"%s"},"response":"![Response image](%s)","behaviour":{"scroll":"start"},"footer":"↩ Open in Preview"}' "${target_img}" "${target_img}"
+  exit 0
+}
+
+function show_failure {
+  printf '{"response":"%s","footer":"↩ Close"}' "${1}"
+  exit 1
+}
+
+# Exit early if query result image exists locally and is recent
+[[ -f "${target_img}" && "$(date -r "${target_file}" +%s)" -lt "$(date -v -1d +%s)" ]] && show_data
+
+# Ensure cache directory
+mkdir -p "${alfred_workflow_cache}"
+
+# Determine image display parameters
+readonly bg_rgb="$(/usr/bin/sed -E 's/rgba\(([0-9]+),([0-9]+),([0-9]+),([0-9\.]+)\)/\1,\2,\3/' <<< "${alfred_theme_background}")"
+
+readonly bg_rgb_r="$(/usr/bin/cut -d, -f1 <<< "${bg_rgb}")"
+readonly bg_rgb_g="$(/usr/bin/cut -d, -f2 <<< "${bg_rgb}")"
+readonly bg_rgb_b="$(/usr/bin/cut -d, -f3 <<< "${bg_rgb}")"
+
+readonly bg_luminance="$(/usr/bin/bc <<< "0.2126 * ${bg_rgb_r} + 0.7152 * ${bg_rgb_g} + 0.0722 * ${bg_rgb_b}")"
+
+[[ "${bg_luminance}" -lt 128 ]] && readonly foreground_colour='white' || readonly foreground_colour='black'
+
+# Grab data
+readonly api_endpoint="http://api.wolframalpha.com/v1/simple?appid=${api_key}&units=${unit_type}&background=${bg_rgb}&foreground=${foreground_colour}&width=${alfred_theme_window_width}&i=${1}"
+
+case "$(/usr/bin/curl --silent --fail "${api_endpoint}" --output "${target_img}" --write-out '%{response_code}')" in
+  000) show_failure 'Unable to connect to the API. Check your internet connection.';;
+  403) show_failure 'Unable to connect to the API. Make sure your API key is correct.';;
+  501) show_failure 'Wolfram|Alpha did not understand your input.';;
+  200) show_data;;
+esac
