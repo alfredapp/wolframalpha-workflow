@@ -392,7 +392,7 @@
 	<key>createdby</key>
 	<string>Vítor Galvão</string>
 	<key>description</key>
-	<string>Query the WolframAlpha API</string>
+	<string>Query the WolframAlpha answer engine</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
