@@ -15,7 +15,7 @@ function show_failure {
 }
 
 # Exit early if query result image exists locally and is recent
-[[ -f "${target_img}" && "$(date -r "${target_file}" +%s)" -lt "$(date -v -1d +%s)" ]] && show_data
+[[ -f "${target_img}" && "$(date -r "${target_img}" +%s)" -gt "$(date -v -1d +%s)" ]] && show_data
 
 # Ensure cache directory
 mkdir -p "${alfred_workflow_cache}"
