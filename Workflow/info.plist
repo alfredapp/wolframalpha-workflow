@@ -395,7 +395,7 @@ Query [Wolfram|Alpha](https://www.wolframalpha.com) via the `wa` keyword.
 		</dict>
 	</array>
 	<key>version</key>
-	<string>2025.1</string>
+	<string>2025.2</string>
 	<key>webaddress</key>
 	<string>https://github.com/alfredapp/wolframalpha-workflow/</string>
 </dict>

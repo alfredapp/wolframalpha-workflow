@@ -1,6 +1,6 @@
 # <img src='Workflow/icon.png' width='45' align='center' alt='icon'> WolframAlpha Alfred Workflow
 
-Query the WolframAlpha API
+Query the WolframAlpha answer engine
 
 [⤓ Install on the Alfred Gallery](https://alfred.app/workflows/alfredapp/wolframalpha)
 
