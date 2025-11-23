@@ -32,7 +32,7 @@ readonly bg_luminance="$(/usr/bin/bc <<< "0.2126 * ${bg_rgb_r} + 0.7152 * ${bg_r
 [[ "${bg_luminance}" -lt 128 ]] && readonly foreground_colour='white' || readonly foreground_colour='black'
 
 # Grab data
-readonly api_endpoint="http://api.wolframalpha.com/v1/simple?appid=${api_key}&units=${unit_type}&background=${bg_rgb}&foreground=${foreground_colour}&width=${alfred_theme_window_width}&i=${1}"
+readonly api_endpoint="https://api.wolframalpha.com/v1/simple?appid=${api_key}&units=${unit_type}&background=${bg_rgb}&foreground=${foreground_colour}&width=${alfred_theme_window_width}&i=${1}"
 
 case "$(/usr/bin/curl --silent --fail "${api_endpoint}" --output "${target_img}" --write-out '%{response_code}')" in
   000) show_failure 'Unable to connect to the API. Check your internet connection.';;
